@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="路線代號："
+        android:id="@+id/textView" />
+
+    <EditText
+        android:layout_width="150pt"
+        android:layout_height="wrap_content"
+        android:id="@+id/pathid" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="收件人E-mail地址："
+        android:id="@+id/textView2" />
+
+    <EditText
+        android:layout_width="150pt"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/emailre" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="寄件人Gmail帳號："
+        android:id="@+id/textView3" />
+
+    <EditText
+        android:layout_width="150pt"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/gmailacc" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="寄件人Gmail密碼："
+        android:id="@+id/textView4" />
+
+    <EditText
+        android:layout_width="150pt"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:id="@+id/gmailpass" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="印表機名稱："
+        android:id="@+id/textView5" />
+
+    <EditText
+        android:layout_width="150pt"
+        android:layout_height="wrap_content"
+        android:id="@+id/printername" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="設定完成"
+            android:id="@+id/setokbtn"
+            android:textSize="18dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="取消設定"
+            android:id="@+id/cancelbtn2"
+            android:textSize="18dp"/>
+
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="更改密碼"
+        android:id="@+id/changebtn"
+        android:textSize="18dp"
+        android:layout_gravity="center_horizontal" />
+
+
+</LinearLayout>

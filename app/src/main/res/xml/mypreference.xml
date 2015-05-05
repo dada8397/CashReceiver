@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        android:key="CHANGE_PASSWORD"
+        android:title="@string/changeps">
+    </Preference>
+
+    <Preference
+        android:key="ID"
+        android:title="@string/id">
+    </Preference>
+
+    <Preference
+        android:key="GMAIL_ID"
+        android:title="@string/gmailid">
+    </Preference>
+
+    <Preference
+        android:key="GMAIL_PASSWORD"
+        android:title="@string/gmailps">
+    </Preference>
+
+    <Preference
+        android:key="MAILRECIEVER"
+        android:title="@string/mailreciever">
+    </Preference>
+
+</PreferenceScreen>
