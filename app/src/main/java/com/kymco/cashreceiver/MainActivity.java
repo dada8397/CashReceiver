@@ -292,7 +292,6 @@ public class MainActivity extends ActionBarActivity {
         mPrinter.setHandler(mHandler);
         mPrinter.openConnection();
         mPrinter.setEncoding("BIG5");
-        mPrinter.setTitle("客戶收據", "客戶收據", null);
     }
 
     // The Handler that gets information back from the bluetooth printer.
@@ -496,6 +495,7 @@ public class MainActivity extends ActionBarActivity {
                         Resources res = getResources();
                         Bitmap bmp = BitmapFactory.decodeResource(res, R.drawable.print_logo);
 
+                        mPrinter.setEncoding("BIG5");
                         mPrinter.printImage(bmp);
                         mPrinter.setTitle("順奇企業　收款證明", "", null);
                         mPrinter.printTitle();
@@ -509,8 +509,6 @@ public class MainActivity extends ActionBarActivity {
                         mPrinter.setCharacterMultiple(1, 1);
                         mPrinter.printText(idv + "\n" + cav + "\n" + ca2v + "\n");
                         mPrinter.setPrinter(BluetoothPrinter.COMM_PRINT_AND_NEWLINE);
-                        mPrinter.setCharacterMultiple(0, 0);
-                        mPrinter.printText("\n\n" + hashs);
                         mPrinter.setPrinter(BluetoothPrinter.COMM_PRINT_AND_NEWLINE);
                         mPrinter.setPrinter(BluetoothPrinter.COMM_PRINT_AND_NEWLINE);
                         mPrinter.setPrinter(BluetoothPrinter.COMM_PRINT_AND_NEWLINE);
@@ -548,6 +546,7 @@ public class MainActivity extends ActionBarActivity {
                         Resources res = getResources();
                         Bitmap bmp = BitmapFactory.decodeResource(res, R.drawable.print_logo);
 
+                        mPrinter.setEncoding("BIG5");
                         mPrinter.printImage(bmp);
                         mPrinter.setTitle("順奇企業　收款證明", "", null);
                         mPrinter.printTitle();
@@ -561,8 +560,6 @@ public class MainActivity extends ActionBarActivity {
                         mPrinter.setCharacterMultiple(1, 1);
                         mPrinter.printText(idv + "\n" + cav + "\n" + ca2v + "\n");
                         mPrinter.setPrinter(BluetoothPrinter.COMM_PRINT_AND_NEWLINE);
-                        mPrinter.setCharacterMultiple(0, 0);
-                        mPrinter.printText("\n\n" + hashs);
                         mPrinter.setPrinter(BluetoothPrinter.COMM_PRINT_AND_NEWLINE);
                         mPrinter.setPrinter(BluetoothPrinter.COMM_PRINT_AND_NEWLINE);
                         mPrinter.setPrinter(BluetoothPrinter.COMM_PRINT_AND_NEWLINE);
