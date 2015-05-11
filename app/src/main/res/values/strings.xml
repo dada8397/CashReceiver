@@ -54,7 +54,7 @@
     <string name="button_scan">Scan for new devices</string>
     <!-- Options Menu -->
     <string name="connect">開啟印表機連線</string>
-    <string name="disconnect">關閉印表機連線</string>
+    <string name="disconnect">退出</string>
     <!-- main.xml -->
     <string name="edit_hint">Printer Name(such as T9)</string>
     <string name="print_text">Print Text</string>

@@ -135,6 +135,7 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    @Override
     protected void onStart() {
         super.onStart();
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
@@ -154,6 +155,14 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPrinter.closeConnection();
+        isConnected = false;
+        mPrinter.setHandler(mHandler);
     }
 
     private View.OnClickListener firstbtnok = new View.OnClickListener() {
@@ -280,6 +289,7 @@ public class MainActivity extends ActionBarActivity {
             } else {
                 mPrinter.closeConnection();
                 mPrinter.setHandler(mHandler);
+                MainActivity.this.finish();
             }
         }
     };
@@ -352,7 +362,6 @@ public class MainActivity extends ActionBarActivity {
 
 
     public View.OnClickListener okOnClick = new View.OnClickListener() {
-        @Override
         public void onClick(View v) {
             SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
             if (settings.getString("PATH_ID", "0").equals("0")) {
@@ -482,13 +491,13 @@ public class MainActivity extends ActionBarActivity {
                         });
                         dialog.show();
 
-                        try{
+                        try {
                             FileWriter fw = new FileWriter("/sdcard/output.txt", true);
                             BufferedWriter bw = new BufferedWriter(fw); //將BufferedWeiter與FileWrite物件做連結
                             bw.write(con + " 已傳送郵件");
                             bw.newLine();
                             bw.close();
-                        }catch(IOException e){
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
 
@@ -524,13 +533,13 @@ public class MainActivity extends ActionBarActivity {
                     }
                 } else if (!checkStatus() && isConnected) {
                     try {
-                        try{
+                        try {
                             FileWriter fw = new FileWriter("/sdcard/output.txt", true);
                             BufferedWriter bw = new BufferedWriter(fw); //將BufferedWeiter與FileWrite物件做連結
                             bw.write(con + " 未傳送郵件");
                             bw.newLine();
                             bw.close();
-                        }catch(IOException e){
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
 
@@ -574,13 +583,13 @@ public class MainActivity extends ActionBarActivity {
                         Log.e("NoSendMail", e.getMessage(), e);
                     }
                 } else {
-                    try{
+                    try {
                         FileWriter fw = new FileWriter("/sdcard/output.txt", true);
                         BufferedWriter bw = new BufferedWriter(fw); //將BufferedWeiter與FileWrite物件做連結
                         bw.write(con + " 未列印收據");
                         bw.newLine();
                         bw.close();
-                    }catch(IOException e){
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
 
@@ -596,6 +605,26 @@ public class MainActivity extends ActionBarActivity {
             }
         }
     };
+
+    public void connect() {
+        // 取得目前已經配對過的裝置
+        Set<BluetoothDevice> setPairedDevices = mBluetoothAdapter.getBondedDevices();
+        // 如果已經有配對過的裝置
+        if (setPairedDevices.size() > 0) {
+            // 把裝置名稱以及MAC Address印出來
+            for (BluetoothDevice device : setPairedDevices) {
+                if (device.getName().equals(mprintername)) {
+                    mConnectedDeviceName = device.getName();
+                    initPrinter(device);
+                }
+            }
+        }
+    }
+
+    public void closeconnect() {
+        mPrinter.closeConnection();
+        mPrinter.setHandler(mHandler);
+    }
 
     //writeToFile 方法如下
     private void writeToFile(File fout, String data) {
