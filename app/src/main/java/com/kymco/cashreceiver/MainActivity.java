@@ -89,6 +89,9 @@ public class MainActivity extends ActionBarActivity {
 
     String dts;
 
+    //database
+    private MyDatabase db = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,6 +136,10 @@ public class MainActivity extends ActionBarActivity {
             Toast.makeText(this, R.string.bt_not_enabled, Toast.LENGTH_LONG).show();
             finish();
         }
+
+        //DB
+        db = new MyDatabase(MainActivity.this.mContext);
+        db.open();
     }
 
     @Override
@@ -453,10 +460,15 @@ public class MainActivity extends ActionBarActivity {
                 gmailacc = settings.getString("GMAIL_ACC", "0");
                 gmailpass = settings.getString("GMAIL_PASS", "0");
                 mailre = settings.getString("EMAIL_RE", "0");
+
                 String mid = "路線代號：" + pathid;
                 String idv = "客戶代號：" + clientidvalue.getText().toString();
                 String cav = "現金額：" + cashvalue.getText().toString();
                 String ca2v = "票據額：" + cash2value.getText().toString();
+                //給DB用的
+                String clientidd = clientidvalue.getText().toString();
+                String cashd = cashvalue.getText().toString();
+                String cash2d = cash2value.getText().toString();
 
                 String tit = mid + "," + idv + "," + cav + "," + ca2v;
                 String con = dts + "\n" + mid + "\n" + idv + "\n" + cav + "\n" + ca2v;
@@ -490,6 +502,8 @@ public class MainActivity extends ActionBarActivity {
                             }
                         });
                         dialog.show();
+
+                        db.append(pathid, clientidd, dts, cashd, cash2d, "Yes");
 
                         try {
                             FileWriter fw = new FileWriter("/sdcard/output.txt", true);
@@ -542,6 +556,8 @@ public class MainActivity extends ActionBarActivity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+
+                        db.append(pathid, clientidd, dts, cashd, cash2d, "No");
 
                         AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
                         dialog.setTitle("傳送失敗！");
