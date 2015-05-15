@@ -8,6 +8,9 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyDatabase extends Activity{
     public SQLiteDatabase db = null;
     private final static String DATABASE_NAME = "data.db";
@@ -43,14 +46,28 @@ public class MyDatabase extends Activity{
         db.close();
     }
 
-    public Cursor getALL(){
+    public List<Item> getALL(){
+        List<Item> result = new ArrayList<>();
         Cursor mCursor = db.query(TABLE_NAME, new String[]{ _ID, PATH_ID, CLIENT_ID, DATE, CASH, CASH2, ISTRANSE},
                 null, null, null, null, null);
 
         while(mCursor.moveToNext()){
-
+            result.add(getRecord(mCursor));
         }
-        return mCursor;
+        mCursor.close();
+        return result;
+    }
+
+    public Item getRecord(Cursor cursor) {
+        Item result = new Item();
+        result._id = cursor.getLong(0);
+        result.pathid = cursor.getString(1);
+        result.clientid = cursor.getString(2);
+        result.date = cursor.getString(3);
+        result.cash = cursor.getString(4);
+        result.cash2 = cursor.getString(5);
+        result.istranse = cursor.getString(6);
+        return result;
     }
 
     public Cursor get(long id){
@@ -92,4 +109,5 @@ public class MyDatabase extends Activity{
 
         return db.update(TABLE_NAME, args, _ID + "=" + rowid, null) > 0;
     }
+
 }

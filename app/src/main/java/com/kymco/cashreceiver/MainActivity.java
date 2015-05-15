@@ -13,9 +13,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -39,7 +41,9 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 public class MainActivity extends ActionBarActivity {
@@ -60,9 +64,9 @@ public class MainActivity extends ActionBarActivity {
     public static String password;
 
     public String pathid;
-    public String gmailacc;
-    public String gmailpass;
-    public String mailre;
+    public static String gmailacc;
+    public static String gmailpass;
+    public static String mailre;
     public String firstps;
 
     public EditText pathidtx;
@@ -90,7 +94,8 @@ public class MainActivity extends ActionBarActivity {
     String dts;
 
     //database
-    private MyDatabase db = null;
+    private static MyDatabase db = null;
+    private static List<Item> item = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -476,9 +481,6 @@ public class MainActivity extends ActionBarActivity {
                 String pass = cashvalue.getText().toString();
                 String pass2 = cash2value.getText().toString();
 
-//                BigInteger hash1 = new BigInteger(pass);
-//                BigInteger hash2 = new BigInteger(SEED);
-//                BigInteger hash = hash1.xor(hash2);
 
                 int passs = Integer.parseInt(pass) + Integer.parseInt(pass2);
                 int hash = SEED * passs;
@@ -503,7 +505,7 @@ public class MainActivity extends ActionBarActivity {
                         });
                         dialog.show();
 
-                        db.append(pathid, clientidd, dts, cashd, cash2d, "Yes");
+                        //db.append(pathid, clientidd, dts, cashd, cash2d, "Yes");
 
                         try {
                             FileWriter fw = new FileWriter("/sdcard/output.txt", true);
@@ -622,63 +624,6 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
-    public void connect() {
-        // 取得目前已經配對過的裝置
-        Set<BluetoothDevice> setPairedDevices = mBluetoothAdapter.getBondedDevices();
-        // 如果已經有配對過的裝置
-        if (setPairedDevices.size() > 0) {
-            // 把裝置名稱以及MAC Address印出來
-            for (BluetoothDevice device : setPairedDevices) {
-                if (device.getName().equals(mprintername)) {
-                    mConnectedDeviceName = device.getName();
-                    initPrinter(device);
-                }
-            }
-        }
-    }
-
-    public void closeconnect() {
-        mPrinter.closeConnection();
-        mPrinter.setHandler(mHandler);
-    }
-
-    //writeToFile 方法如下
-    private void writeToFile(File fout, String data) {
-        FileOutputStream osw = null;
-        try {
-            osw = new FileOutputStream(fout);
-            osw.write(data.getBytes());
-            osw.flush();
-        } catch (Exception e) {
-            ;
-        } finally {
-            try {
-                osw.close();
-            } catch (Exception e) {
-                ;
-            }
-        }
-    }
-
-    //檢查外部儲存體是否可以進行寫入
-    public boolean isExtStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
-    }
-
-    //檢查外部儲存體是否可以進行讀取
-    public boolean isExtStorageReadable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) ||
-                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            return true;
-        }
-        return false;
-    }
-
     public boolean checkStatus() {
         final ConnectivityManager connMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         final android.net.NetworkInfo mobile = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
@@ -751,5 +696,43 @@ public class MainActivity extends ActionBarActivity {
             setting.cancel();
         }
     };
+
+    public static class MyNetworkConnectedReceiver extends BroadcastReceiver {
+        private Context _context;
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            _context = context;
+
+            ConnectivityManager connectivityManager = ((ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE));
+            NetworkInfo currentNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (currentNetworkInfo != null && currentNetworkInfo.isConnected()) {
+                //do something when network connected.
+                item = db.getALL();
+                for(int i=0; i<item.size(); i++) {
+                    Item now = item.get(i);
+                    String tit = "路線代號：" + now.pathid + ",客戶代號：" + now.clientid
+                            + ",現金額：" + now.cash + ",票據額：" + now.cash2;
+                    String con = now.date + "\n路線代號：" + now.pathid + "\n客戶代號：" + now.clientid
+                            + "\n現金額：" + now.cash + "\n票據額：" + now.cash2;
+                    try {
+                        GMailSender sender = new GMailSender(gmailacc, gmailpass); //寄件者(開發方)帳號與密碼
+                        sender.sendMail("補寄" + tit,   //信件標題
+                                con,   //信件內容
+                                gmailacc,   //寄件者
+                                mailre);   //收件者
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    db.delete(now._id);
+                }
+            }
+
+        }
+
+    }
+
+
 
 }
